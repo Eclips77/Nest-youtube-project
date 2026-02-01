@@ -11,18 +11,24 @@ import { DbType } from '../../common/constants/enums';
 import { StorageModule } from '../../core/storage/storage.module';
 import { EncodingModule } from '../encoding/encoding.module';
 import { GenresModule } from '../genres/genres.module';
+import { UsersModule } from '../users/users.module'; // Added UsersModule
 import { GenreExistsPipe } from './pipes/genre-exists.pipe';
+import { VideoSagaService } from './video-saga.service';
+import { RollbackManager } from '../../common/managers/rollback.manager'; // Ideally provided globally or here
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: Video.name, schema: VideoSchema }]),
     StorageModule,
     EncodingModule,
-    GenresModule, // Import GenresModule to use GenreExistsPipe which depends on GenreService/Repo
+    GenresModule,
+    UsersModule,
   ],
   controllers: [VideosController],
   providers: [
     VideosService,
+    VideoSagaService, // Registered Saga Service
+    RollbackManager, // Registered Manager (Request Scoped)
     MongoVideoRepository,
     JsonVideoRepository,
     GenreExistsPipe,
@@ -40,6 +46,6 @@ import { GenreExistsPipe } from './pipes/genre-exists.pipe';
       inject: [ConfigService, MongoVideoRepository, JsonVideoRepository],
     },
   ],
-  exports: [VIDEO_REPOSITORY, VideosService],
+  exports: [VIDEO_REPOSITORY, VideosService, VideoSagaService],
 })
 export class VideosModule {}

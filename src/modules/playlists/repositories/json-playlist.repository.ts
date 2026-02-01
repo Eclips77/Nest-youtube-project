@@ -5,6 +5,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 import { ConfigService } from '@nestjs/config';
+import { ClientSession } from 'mongoose';
 
 @Injectable()
 export class JsonPlaylistRepository implements IPlaylistRepository, OnModuleInit {
@@ -34,7 +35,7 @@ export class JsonPlaylistRepository implements IPlaylistRepository, OnModuleInit
     fs.writeFileSync(this.filePath, JSON.stringify(data, null, 2));
   }
 
-  async create(playlist: Playlist): Promise<Playlist> {
+  async create(playlist: Playlist, options?: { session?: ClientSession }): Promise<Playlist> {
     const playlists = this.readDb();
     const newPlaylist = { ...playlist, _id: uuidv4() };
     playlists.push(newPlaylist);
