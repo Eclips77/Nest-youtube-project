@@ -10,6 +10,7 @@ import { StorageModule } from './core/storage/storage.module';
 import { GenresModule } from './modules/genres/genres.module';
 import { VideosModule } from './modules/videos/videos.module';
 import { PlaylistsModule } from './modules/playlists/playlists.module';
+import { UsersModule } from './modules/users/users.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { PlaylistsModule } from './modules/playlists/playlists.module';
     GenresModule,
     VideosModule,
     PlaylistsModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

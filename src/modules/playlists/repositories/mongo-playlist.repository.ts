@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, ClientSession } from 'mongoose';
 import { IPlaylistRepository } from './playlist.repository.interface';
 import { Playlist, PlaylistDocument } from '../schemas/playlist.schema';
 
@@ -8,9 +8,9 @@ import { Playlist, PlaylistDocument } from '../schemas/playlist.schema';
 export class MongoPlaylistRepository implements IPlaylistRepository {
   constructor(@InjectModel(Playlist.name) private playlistModel: Model<PlaylistDocument>) {}
 
-  async create(playlist: Playlist): Promise<Playlist> {
+  async create(playlist: Playlist, options?: { session?: ClientSession }): Promise<Playlist> {
     const createdPlaylist = new this.playlistModel(playlist);
-    return createdPlaylist.save();
+    return createdPlaylist.save({ session: options?.session });
   }
 
   async findAll(): Promise<Playlist[]> {

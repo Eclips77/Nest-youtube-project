@@ -5,6 +5,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 import { ConfigService } from '@nestjs/config';
+import { ClientSession } from 'mongoose';
 
 @Injectable()
 export class JsonVideoRepository implements IVideoRepository, OnModuleInit {
@@ -34,7 +35,8 @@ export class JsonVideoRepository implements IVideoRepository, OnModuleInit {
     fs.writeFileSync(this.filePath, JSON.stringify(data, null, 2));
   }
 
-  async create(video: Video): Promise<Video> {
+  async create(video: Video, options?: { session?: ClientSession }): Promise<Video> {
+    // JSON Repository ignores sessions/transactions
     const videos = this.readDb();
     const newVideo = { ...video, _id: uuidv4() };
     videos.push(newVideo);

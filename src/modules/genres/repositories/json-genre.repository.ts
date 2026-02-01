@@ -5,6 +5,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 import { ConfigService } from '@nestjs/config';
+import { ClientSession } from 'mongoose';
 
 @Injectable()
 export class JsonGenreRepository implements IGenreRepository, OnModuleInit {
@@ -34,7 +35,7 @@ export class JsonGenreRepository implements IGenreRepository, OnModuleInit {
     fs.writeFileSync(this.filePath, JSON.stringify(data, null, 2));
   }
 
-  async create(genre: Genre): Promise<Genre> {
+  async create(genre: Genre, options?: { session?: ClientSession }): Promise<Genre> {
     const genres = this.readDb();
     const newGenre = { ...genre, _id: uuidv4() };
     genres.push(newGenre);

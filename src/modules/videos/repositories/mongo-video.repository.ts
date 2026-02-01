@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, ClientSession } from 'mongoose';
 import { IVideoRepository } from './video.repository.interface';
 import { Video, VideoDocument } from '../schemas/video.schema';
 
@@ -8,9 +8,9 @@ import { Video, VideoDocument } from '../schemas/video.schema';
 export class MongoVideoRepository implements IVideoRepository {
   constructor(@InjectModel(Video.name) private videoModel: Model<VideoDocument>) {}
 
-  async create(video: Video): Promise<Video> {
+  async create(video: Video, options?: { session?: ClientSession }): Promise<Video> {
     const createdVideo = new this.videoModel(video);
-    return createdVideo.save();
+    return createdVideo.save({ session: options?.session });
   }
 
   async findAll(): Promise<Video[]> {
